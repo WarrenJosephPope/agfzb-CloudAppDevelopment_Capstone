@@ -3,9 +3,74 @@
 <head>
     <meta charset="UTF-8">
     {% load static %}
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
 </head>
     <body>
+        <nav class="navbar navbar-expand-lg bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{% url 'djangoapp:index' %}">Dealership Review</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{% url 'djangoapp:index' %}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'djangoapp:about' %}">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'djangoapp:contact' %}">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+                <ul class="nav navbar-nav navbar-right">
+                {% if user.is_authenticated %}
+                    <li>
+                        <a class="btn btn-link" href="#">{{ user.first_name }}({{ user.username }})</a>
+                        <a class="btn btn-link" href="{% url 'djangoapp:logout' %}">Logout</a>
+                    </li>
+                {% else %}
+                    <li>
+                        <form class="form-inline" action="{% url 'djangoapp:login' %}" method="post">
+                        {% csrf_token %}
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Username" name="username" >
+                                <input type="password" class="form-control" placeholder="Password" name="psw" >
+                                <button class="btn btn-primary" type="submit">Login</button>
+                                <a class="btn btn-link" href="{% url 'djangoapp:registration' %}">Sign Up</a>
+                            </div>
+                        </form>
+                    </li>
+                {% endif %}
+                </ul>
+            </div>
+        </nav>
     <!--Add a registration form here -->
+        <form action="{% url 'djangoapp:registration' %}" method="post">
+            <div class="container">
+                {% csrf_token %}
+                <h1>Sign Up</h1>
+                <hr>
+                <div class="form-group">
+                    <label for="username"><b>User Name</b></label>
+                    <input type="text" class="form-control" placeholder="Enter User Name: " name="username" required>
+                    <label for="firstname"><b>First Name</b></label>
+                    <input type="text" class="form-control" placeholder="Enter First Name: " name="firstname" required>
+                    <label for="lastname"><b>Last Name</b></label>
+                    <input type="text" class="form-control" placeholder="Enter Last Name: " name="lastname" required>
+                    <label for="psw"><b>Password</b></label>
+                    <input type="password" class="form-control" placeholder="Enter Password: " name="psw" required>
+                    {% if message %}
+                    <div class="alert alert-warning">
+                        {{ message }}
+                    </div>
+                    {% endif %}
+                    <button class="btn btn-primary" type="submit">Sign up</button>
+                </div>
+            </div>
+        </form>
     </body>
 </html>
