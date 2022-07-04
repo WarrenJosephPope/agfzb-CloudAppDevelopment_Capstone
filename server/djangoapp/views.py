@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
+from django.views.generic import ListView
 # from .models import related models
 # from .restapis import related methods
 from django.contrib.auth import login, logout, authenticate
@@ -15,15 +16,24 @@ logger = logging.getLogger(__name__)
 
 
 # Create your views here.
-
+class index(ListView):
+    template_name = 'djangoapp/index.html'
+    context_object_name = 'index'
+    def get_queryset(self):
+        pass
 
 # Create an `about` view to render a static about page
 # def about(request):
 # ...
 
+def about(request):
+    return render(request, 'djangoapp/about.html')
 
 # Create a `contact` view to return a static contact page
 #def contact(request):
+
+def contact(request):
+    return render(request, 'djangoapp/contact.html')
 
 # Create a `login_request` view to handle sign in request
 # def login_request(request):
