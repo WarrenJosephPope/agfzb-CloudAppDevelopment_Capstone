@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import ListView
 # from .models import related models
 # from .restapis import related methods
-from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf
+from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf, post_request
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -112,8 +112,18 @@ def get_dealer_details(request, dealer_id):
 # def add_review(request, dealer_id):
 # ...
 def add_review(request, dealer_id):
-    if request.method == "POST":
-        review = dict()
-        review['time'] = datetime.utcnow().isoformat()
-        review['dealership'] = request.POST['dealership']
-        review['review'] = request.POST['review']
+    review = dict()
+    review['name'] = "Warren Pope"
+    review['dealership'] = 1
+    review['review'] = "This is good"
+    review['purchase'] = False
+    # if review['purchase'] == True:
+    #     review['purchase_date'] = request.POST['purchase_date']
+    #     review['car_make'] = request.POST['car_make']
+    #     review['car_model'] = request.POST['car_model']
+    #     review['car_year'] = request.POST['car_year']
+    json_payload = dict()
+    json_payload['review'] = review['review']
+    result = post_request(url="https://58777923.us-south.apigw.appdomain.cloud/api/review", json_payload=json_payload, dealerId=dealer_id)
+    print(result)
+    HttpResponse(result)
