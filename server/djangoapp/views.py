@@ -91,9 +91,8 @@ def get_dealerships(request):
     context = {}
     if request.method == "GET":
         url = "https://58777923.us-south.apigw.appdomain.cloud/api/dealership"
-        dealerships = get_dealers_from_cf(url)
-        for dealer in dealerships:
-            context[dealer.id] = dealer.full_name
+        dealership = get_dealers_from_cf(url)
+        context = {"dealership": dealership}
         return render(request, "djangoapp/index.html", context=context)
 
 
@@ -105,25 +104,31 @@ def get_dealer_details(request, dealer_id):
     if request.method == "GET":
         url = "https://58777923.us-south.apigw.appdomain.cloud/api/review"
         reviews = get_dealer_reviews_from_cf(url, dealer_id)
-        review_list = ' '.join([review.review for review in reviews])
-        return HttpResponse(review_list)
+        dealership = get_dealers_from_cf("https://58777923.us-south.apigw.appdomain.cloud/api/dealership", id=dealer_id)
+        dealer_name = ""
+        for dealer in dealership:
+            dealer_name = dealer.full_name
+        context = {"reviews": reviews, "dealer_name": dealer_name}
+        return render(request, "djangoapp/dealer_details.html", context=context)
 
 # Create a `add_review` view to submit a review
 # def add_review(request, dealer_id):
 # ...
 def add_review(request, dealer_id):
-    review = dict()
-    review['name'] = "Warren Pope"
-    review['dealership'] = 1
-    review['review'] = "This is good"
-    review['purchase'] = False
-    # if review['purchase'] == True:
-    #     review['purchase_date'] = request.POST['purchase_date']
-    #     review['car_make'] = request.POST['car_make']
-    #     review['car_model'] = request.POST['car_model']
-    #     review['car_year'] = request.POST['car_year']
-    json_payload = dict()
-    json_payload['review'] = review['review']
-    result = post_request(url="https://58777923.us-south.apigw.appdomain.cloud/api/review", json_payload=json_payload, dealerId=dealer_id)
-    print(result)
-    HttpResponse(result)
+    if request.method == "POST":
+        review = dict()
+        review['name'] = "Warren Pope"
+        review['dealership'] = 1
+        review['review'] = "This is good"
+        review['purchase'] = False
+        # if review['purchase'] == True:
+        #     review['purchase_date'] = request.POST['purchase_date']
+        #     review['car_make'] = request.POST['car_make']
+        #     review['car_model'] = request.POST['car_model']
+        #     review['car_year'] = request.POST['car_year']
+        json_payload = dict()
+        json_payload['review'] = review['review']
+        result = post_request(url="https://58777923.us-south.apigw.appdomain.cloud/api/review", json_payload=json_payload, dealerId=dealer_id)
+        print(result)
+        HttpResponse(result)
+    return render(request, "django/add_review", context=context)

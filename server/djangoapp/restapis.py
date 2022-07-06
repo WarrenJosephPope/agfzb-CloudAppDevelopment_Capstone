@@ -46,7 +46,7 @@ def get_dealers_from_cf(url, **kwargs):
     if json_result:
         dealers = json_result["result"]
         for dealer_doc in dealers:
-            dealer_obj = CarDealer(address=dealer_doc['address'],city=dealer_doc['city'], full_name=dealer_doc['full_name'], id=dealer_doc['id'], lat=dealer_doc['lat'], lon=dealer_doc['long'], short_name=dealer_doc['short_name'], st=dealer_doc['st'], zip_code=dealer_doc['zip'])
+            dealer_obj = CarDealer(address=dealer_doc['address'],city=dealer_doc['city'], full_name=dealer_doc['full_name'], id=dealer_doc['id'], lat=dealer_doc['lat'], lon=dealer_doc['long'], short_name=dealer_doc['short_name'], st=dealer_doc['st'], state=dealer_doc['state'], zip_code=dealer_doc['zip'])
             results.append(dealer_obj)
     return results
 
@@ -77,7 +77,7 @@ def analyze_review_sentiments(text):
     authenticator = IAMAuthenticator(api_key) 
     natural_language_understanding = NaturalLanguageUnderstandingV1(version='2021-08-01',authenticator=authenticator) 
     natural_language_understanding.set_service_url(url) 
-    response = natural_language_understanding.analyze( text=text ,features=Features(sentiment=SentimentOptions(targets=[text]))).get_result() 
+    response = natural_language_understanding.analyze( text=text, language="en", features=Features(sentiment=SentimentOptions(targets=[text]))).get_result() 
     label=json.dumps(response, indent=2) 
     label = response['sentiment']['document']['label']
     return(label) 
