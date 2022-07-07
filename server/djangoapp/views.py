@@ -108,7 +108,7 @@ def get_dealer_details(request, dealer_id):
         dealer_name = ""
         for dealer in dealership:
             dealer_name = dealer.full_name
-        context = {"reviews": reviews, "dealer_name": dealer_name}
+        context = {"reviews": reviews, "dealer_name": dealer_name, "dealer_id": dealer_id}
         return render(request, "djangoapp/dealer_details.html", context=context)
 
 # Create a `add_review` view to submit a review
@@ -131,4 +131,18 @@ def add_review(request, dealer_id):
         result = post_request(url="https://58777923.us-south.apigw.appdomain.cloud/api/review", json_payload=json_payload, dealerId=dealer_id)
         print(result)
         HttpResponse(result)
-    return render(request, "django/add_review", context=context)
+    else:
+        context = dict()
+        reviews = get_dealer_reviews_from_cf("https://58777923.us-south.apigw.appdomain.cloud/api/review", dealer_id=dealer_id)
+        dealership = get_dealers_from_cf("https://58777923.us-south.apigw.appdomain.cloud/api/dealership", id=dealer_id)
+        cars = []
+        for review in reviews:
+            if review.purchase == False:
+                continue
+            car = {"name": review.car_model, "make": review.car_make, "year": review.car_year}
+            cars.append(car)
+        for dealer in dealership:
+            context["dealer_name"] = dealer.full_name
+        context["cars"] = cars
+        context["dealer_id"] = dealer_id
+        return render(request, "djangoapp/add_review.html", context=context)
