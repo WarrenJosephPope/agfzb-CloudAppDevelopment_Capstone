@@ -16,6 +16,8 @@ class CarMake(models.Model):
     description = models.CharField(null=True, max_length=150)
     def __str__(self):
         return self.name
+    def get_data(self):
+        return self.name
 
 # <HINT> Create a Car Model model `class CarModel(models.Model):`:
 # - Many-To-One relationship to Car Make model (One Car Make has many Car Models, using ForeignKey field)
@@ -27,21 +29,27 @@ class CarMake(models.Model):
 # - __str__ method to print a car make object
 
 class CarModel(models.Model):
-    SEDAN = '0'
-    SUV = '1'
-    WAGON = '2'
+    SEDAN = 'Sedan'
+    SUV = 'SUV'
+    WAGON = 'Wagon'
     CAR_CHOICES = [(SEDAN, "Sedan"), (SUV, "SUV"), (WAGON, "Wagon")]
-
     car_make = models.ForeignKey(CarMake, on_delete=models.CASCADE)
-    dealer_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    name = models.CharField(null=False, max_length=30, choices=CAR_CHOICES)
+    dealer_id = models.IntegerField()
+    car_name = models.CharField(null=False, max_length=30, default="")
+    car_type = models.CharField(null=False, max_length=30, choices=CAR_CHOICES, default=SEDAN)
     year = models.DateField(default=now)
     def __str__(self):
-        return self.name
+        return self.car_name
+    def get_data(self):
+        data = dict()
+        data['make'] = self.car_make.get_data()
+        data['dealer_id'] = self.dealer_id
+        data['name'] = self.car_name
+        data['year'] = self.year.strftime('%Y')
+        return data
 
 # <HINT> Create a plain Python class `CarDealer` to hold dealer data
 class CarDealer:
-
     def __init__(self, address, city, full_name, id, lat, lon, short_name, st, state, zip_code):
         self.address = address
         self.city = city

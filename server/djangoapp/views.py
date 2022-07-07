@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import ListView
 # from .models import related models
+from .models import CarMake, CarModel
 # from .restapis import related methods
 from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf, post_request
 from django.contrib.auth import login, logout, authenticate
@@ -140,11 +141,11 @@ def add_review(request, dealer_id):
         reviews = get_dealer_reviews_from_cf("https://58777923.us-south.apigw.appdomain.cloud/api/review", dealer_id=dealer_id)
         dealership = get_dealers_from_cf("https://58777923.us-south.apigw.appdomain.cloud/api/dealership", id=dealer_id)
         cars = []
-        for review in reviews:
-            if review.purchase == False:
-                continue
-            car = {"name": review.car_model, "make": review.car_make, "year": review.car_year}
+        car_list = CarModel.objects.all()
+        for car in car_list:
             cars.append(car)
+            break
+        print(cars)
         for dealer in dealership:
             context["dealer_name"] = dealer.full_name
         context["cars"] = cars
