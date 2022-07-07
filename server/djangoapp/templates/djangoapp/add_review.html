@@ -67,11 +67,11 @@
             </div>
             <div class="mb-3 form-check">
                 <input class="form-check-input" type="checkbox" name="purchase" id="purchasecheck">
-                <label for="purchasecheck">Has purchased the car from Sub-Ex Car Dealership?</label>
+                <label for="purchasecheck">Has purchased the car from {{dealer_name}}?</label>
             </div>
             <div class="mb-3">
                 <label for="car">Select your car (model-make-year): </label>
-                <select name="car" id="car" class="form-select" required>
+                <select name="car" id="car" class="form-select">
                 {% for car in cars %}
                     <option value="{{car.name}}-{{car.make}}-{{car.year}}">{{car.name}}-{{car.make}}-{{car.year}}</option>
                 {% endfor %}
