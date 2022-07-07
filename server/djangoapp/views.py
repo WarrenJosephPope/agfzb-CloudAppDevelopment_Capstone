@@ -121,7 +121,7 @@ def add_review(request, dealer_id):
         review['name'] = request.POST["name"]
         review['dealership'] = dealer_id
         review['review'] = request.POST["content"]
-        if request.POST['purchase']:
+        if "purchase" in request.POST:
             review['purchase'] = True
         else:
             review['purchase'] = False
