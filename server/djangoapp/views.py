@@ -141,7 +141,7 @@ def add_review(request, dealer_id):
         reviews = get_dealer_reviews_from_cf("https://58777923.us-south.apigw.appdomain.cloud/api/review", dealer_id=dealer_id)
         dealership = get_dealers_from_cf("https://58777923.us-south.apigw.appdomain.cloud/api/dealership", id=dealer_id)
         cars = []
-        car_list = CarModel.objects.all()
+        car_list = CarModel.objects.all().filter(dealer_id=dealer_id)
         for car in car_list:
             cars.append(car.get_data())
             break

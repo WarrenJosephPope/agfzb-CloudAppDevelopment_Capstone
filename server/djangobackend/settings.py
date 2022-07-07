@@ -27,7 +27,7 @@ DEBUG = True
 
 APPEND_SLASH = True
 
-ALLOWED_HOSTS = ["localhost", "warrenpope20.us-south.cf.appdomain.cloud"]
+ALLOWED_HOSTS = ["localhost", "warrenpope20.us-south.cf.appdomain.cloud", "https://warrenpope20-8000.theiadocker-3-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai"]
 
 
 # Application definition
@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+
+CSRF_TRUSTED_ORIGINS = ["localhost", "warrenpope20.us-south.cf.appdomain.cloud", "https://warrenpope20-8000.theiadocker-3-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai"]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
