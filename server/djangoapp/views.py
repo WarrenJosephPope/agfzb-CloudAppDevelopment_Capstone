@@ -117,20 +117,25 @@ def get_dealer_details(request, dealer_id):
 def add_review(request, dealer_id):
     if request.method == "POST":
         review = dict()
-        review['name'] = "Warren Pope"
-        review['dealership'] = 1
-        review['review'] = "This is good"
-        review['purchase'] = False
-        # if review['purchase'] == True:
-        #     review['purchase_date'] = request.POST['purchase_date']
-        #     review['car_make'] = request.POST['car_make']
-        #     review['car_model'] = request.POST['car_model']
-        #     review['car_year'] = request.POST['car_year']
+        review['name'] = request.POST["name"]
+        review['dealership'] = dealer_id
+        review['review'] = request.POST["content"]
+        if request.POST['purchase']:
+            review['purchase'] = True
+        else:
+            review['purchase'] = False
+        if review['purchase']:
+            review['purchase_date'] = request.POST['purchasedate']
+            car = request.POST['car']
+            car_details = car.split('-')
+            review['car_make'] = car_details[0]
+            review['car_model'] = car_details[1]
+            review['car_year'] = car_details[2]
         json_payload = dict()
-        json_payload['review'] = review['review']
-        result = post_request(url="https://58777923.us-south.apigw.appdomain.cloud/api/review", json_payload=json_payload, dealerId=dealer_id)
+        json_payload['review'] = review
+        result = post_request("https://58777923.us-south.apigw.appdomain.cloud/api/review", json_payload, dealerId=dealer_id)
         print(result)
-        HttpResponse(result)
+        return HttpResponse(str(result))
     else:
         context = dict()
         reviews = get_dealer_reviews_from_cf("https://58777923.us-south.apigw.appdomain.cloud/api/review", dealer_id=dealer_id)

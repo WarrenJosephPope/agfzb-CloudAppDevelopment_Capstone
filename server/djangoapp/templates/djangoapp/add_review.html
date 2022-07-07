@@ -57,10 +57,12 @@
     <!--Add review form here -->
     <div class="container">
         <p style="font-size:30px">Add a review about <strong>{{dealer_name}}</strong></p>
-        <form class="p-3 border border-info" method="POST" action="{% url 'djangoapp:add_review' dealer_id %}">
+        <form class="p-3 border border-info rounded" method="POST" action="{% url 'djangoapp:add_review' dealer_id %}">
+        {% csrf_token %}
+            <input class="form-control" type="hidden" name="name" value="{{user.first_name}} {{user.last_name}}">
             <div class="mb-3">
                 <label for="content" style="font-weight:bold" class="form-label">Enter the review content:</label>
-                <textarea class="form-control" id="content" name="content" rows="2" required></textarea>
+                <textarea class="form-control" id="content" name="content" rows="2" placeholder="Enter review..." required></textarea>
             </div>
             <div class="mb-3 form-check">
                 <input class="form-check-input" type="checkbox" name="purchase" id="purchasecheck">
@@ -70,15 +72,15 @@
                 <label for="car">Select your car (model-make-year): </label>
                 <select name="car" id="car" class="form-select" required>
                 {% for car in cars %}
-                    <option value={{car.id}}>{{car.name}}-{{car.make}}-{{car.year}}</option>
+                    <option value="{{car.name}}-{{car.make}}-{{car.year}}">{{car.name}}-{{car.make}}-{{car.year}}</option>
                 {% endfor %}
                 </select>
             </div>
             <div class="mb-3">
                 <label for="purchasedate">Select your purchase date</label>
-                <input class="date-own form-control" type="text" name="purchasedate" id="purchasedate">
+                <input class="date-own form-control" type="date" name="purchasedate" id="purchasedate">
             </div>
-            <button type="submit">Submit</button>
+            <button class="btn btn-primary btn-lg" type="submit">Submit</button>
         </form>
     </div>
     <script>
