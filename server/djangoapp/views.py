@@ -143,7 +143,7 @@ def add_review(request, dealer_id):
         cars = []
         car_list = CarModel.objects.all()
         for car in car_list:
-            cars.append(car)
+            cars.append(car.get_data())
             break
         print(cars)
         for dealer in dealership:
